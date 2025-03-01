@@ -1,20 +1,17 @@
 package pl.zhr.czappka.bazahr_poc.memberships;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
 
 import java.time.Instant;
-import java.util.UUID;
 
-@Entity
-@Table(name = "memberships")
 class Membership {
 
     @Id
-    @GeneratedValue
-    UUID id;
+    Integer id;
 
     Instant createdAt;
+
+    Membership(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
 }

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @RestController
 class MembershipsQueryController {
@@ -16,10 +17,8 @@ class MembershipsQueryController {
     }
 
     @PostMapping("/v1/memberships/")
-    void crateMembership() {
-        var m = new Membership();
-        m.createdAt = Instant.now();
-        this.repository.save(m);
+    void createMembership() {
+        this.repository.save(new Membership(Instant.now()));
     }
 
     @GetMapping("/v1/memberships")
