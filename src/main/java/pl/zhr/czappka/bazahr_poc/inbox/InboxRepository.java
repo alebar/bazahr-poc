@@ -34,6 +34,7 @@ class InboxRepository {
     IncomingMessage save(final IncomingMessage msg) throws JsonProcessingException {
         final var payload = this.objectMapper.writeValueAsString(msg.payload);
         var id = this.messageInsert.executeAndReturnKey(Map.of(
+                "type", msg.type,
                 "created_at", Timestamp.from(msg.createdAt),
                 "payload", payload,
                 "status", msg.status.name()
@@ -66,14 +67,15 @@ class InboxRepository {
             var rs = ps.getResultSet();
             if (rs.next()) {
                 try {
-                    var p = this.objectMapper.readValue(
+                    var payload = this.objectMapper.readValue(
                             rs.getString("payload"),
                             MAP_REF
                     );
                     var im = new IncomingMessage(
                             rs.getInt("id"),
+                            rs.getString("type"),
                             rs.getTimestamp("created_at").toInstant(),
-                            p,
+                            payload,
                             IncomingMessageStatus.valueOf(rs.getString("status"))
                     );
                     return Optional.of(im);

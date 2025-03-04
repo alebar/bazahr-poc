@@ -10,20 +10,24 @@ class IncomingMessage {
     @Id
     Integer id;
 
+    String type;
+
     Instant createdAt;
 
     Map<String, Object> payload;
 
     IncomingMessageStatus status;
 
-    IncomingMessage(Instant createdAt, Map<String, Object> payload, IncomingMessageStatus status) {
+    IncomingMessage(String type, Instant createdAt, Map<String, Object> payload, IncomingMessageStatus status) {
+        this.type = type;
         this.createdAt = createdAt;
         this.payload = payload;
         this.status = status;
     }
 
-    IncomingMessage(Integer id, Instant createdAt, Map<String, Object> payload, IncomingMessageStatus status) {
+    IncomingMessage(Integer id, String type, Instant createdAt, Map<String, Object> payload, IncomingMessageStatus status) {
         this.id = id;
+        this.type = type;
         this.createdAt = createdAt;
         this.payload = payload;
         this.status = status;
@@ -33,6 +37,7 @@ class IncomingMessage {
     public String toString() {
         return "IncomingMessage{" +
                 "id=" + id +
+                ", type='" + type + '\'' +
                 ", createdAt=" + createdAt +
                 ", payload=" + payload +
                 ", status=" + status +

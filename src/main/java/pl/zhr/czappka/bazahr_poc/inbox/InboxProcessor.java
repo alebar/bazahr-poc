@@ -20,7 +20,20 @@ class InboxProcessor {
 
     @Scheduled(fixedDelay = 2, timeUnit = TimeUnit.SECONDS)
     public void scheduledTask() {
-        log.info("job się odpalił z scheduled");
+        var opt = repository.findOldestPendingMessageSettingProcessing();
+
+        if (opt.isEmpty()) {
+            log.debug("No incoming message to process.");
+            return;
+        }
+
+        var msg = opt.get();
+
+        if (log.isDebugEnabled()) {
+            log.debug("Processing incoming message: " + msg);
+        }
+
+
 
     }
 }

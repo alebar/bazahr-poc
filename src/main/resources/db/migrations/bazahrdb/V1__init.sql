@@ -5,8 +5,9 @@ create table membership (
 
 create table inbox (
   id serial primary key,
+  type text not null,
   created_at timestamp with time zone not null,
   processing_started_at timestamp with time zone,
   payload jsonb,
-  status varchar
+  status varchar not null
 );

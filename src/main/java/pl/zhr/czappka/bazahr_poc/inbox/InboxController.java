@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,8 +27,13 @@ class InboxController {
     @PostMapping("/v1/messages/")
     void createMessage() {
         var msg = new IncomingMessage(
+                "urn:ekp:events/candidate-accepted",
                 Instant.now(),
-                Map.of("personId", "urn:kof:people/123456"),
+                Map.of(
+                        "commanderId", "urn:kof:people/123456",
+                        "candidateIds", List.of("urn:kof:people/1", "urn:kof:people/2"),
+                        "unitId", "urn:ekp:units/1a"
+                ),
                 IncomingMessageStatus.pending
         );
         try {
