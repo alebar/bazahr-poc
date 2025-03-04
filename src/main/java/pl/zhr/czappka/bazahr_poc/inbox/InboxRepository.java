@@ -6,16 +6,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Component
 class InboxRepository {
 
     private final static TypeReference<HashMap<String,Object>> MAP_REF = new TypeReference<>() {};
-
 
     final JdbcTemplate jdbcTemplate;
     final ObjectMapper objectMapper;

@@ -12,8 +12,15 @@ class InboxProcessor {
 
     private final Log log = LogFactory.getLog(InboxProcessor.class);
 
+    private final InboxRepository repository;
+
+    InboxProcessor(InboxRepository repository) {
+        this.repository = repository;
+    }
+
     @Scheduled(fixedDelay = 2, timeUnit = TimeUnit.SECONDS)
     public void scheduledTask() {
         log.info("job się odpalił z scheduled");
+
     }
 }
