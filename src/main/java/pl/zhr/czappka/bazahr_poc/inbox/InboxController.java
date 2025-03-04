@@ -36,11 +36,7 @@ class InboxController {
                 ),
                 IncomingMessageStatus.pending
         );
-        try {
-            this.inboxRepository.save(msg);
-        } catch (JsonProcessingException e) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
-        }
+        this.inboxRepository.save(msg);
     }
 
     @GetMapping("/v1/message-test")

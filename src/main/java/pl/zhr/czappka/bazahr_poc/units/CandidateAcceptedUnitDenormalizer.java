@@ -24,6 +24,7 @@ class CandidateAcceptedUnitDenormalizer implements Denormalizer {
     public void denormalize(Map<String, Object> payload) {
         var unitId = (String) payload.get("unitId");
         var candidates = (Collection<?>) payload.get("candidateIds");
+
         unitRepository.findByUnitId(unitId).ifPresent(unit -> {
             unit.numerosity = unit.numerosity + candidates.size();
             unitRepository.save(unit);

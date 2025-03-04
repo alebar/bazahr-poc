@@ -31,16 +31,56 @@ class InboxRepository {
                 usingGeneratedKeyColumns("id");
     }
 
-    IncomingMessage save(final IncomingMessage msg) throws JsonProcessingException {
-        final var payload = this.objectMapper.writeValueAsString(msg.payload);
-        var id = this.messageInsert.executeAndReturnKey(Map.of(
-                "type", msg.type,
-                "created_at", Timestamp.from(msg.createdAt),
-                "payload", payload,
-                "status", msg.status.name()
-        ));
-        msg.id = (Integer) id;
-        return msg;
+    IncomingMessage save(final IncomingMessage msg) {
+        try {
+            var type = msg.type;
+            var createdAt = Timestamp.from(msg.createdAt);
+            var payload = this.objectMapper.writeValueAsString(msg.payload);
+            var status = msg.status.name();
+            var processingStartedAt = msg.getProcessingStartedAt().
+                    map(Timestamp::from).
+                    orElse(null);
+
+            if (null == msg.id) {
+                msg.id = insert(type, createdAt, payload, status, processingStartedAt);
+            } else {
+                update(msg.id, type, createdAt, payload, status, processingStartedAt);
+            }
+
+            return msg;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Integer insert(
+            String type,
+            Timestamp createdAt,
+            String payload,
+            String status,
+            Timestamp processingStartedAt) {
+        Map<String, Object> args = new HashMap<>();
+        args.put("type", type);
+        args.put("created_at", createdAt);
+        args.put("payload", payload);
+        args.put("status", status);
+        Optional.ofNullable(processingStartedAt).
+                ifPresent(t -> args.put("processing_started_at", t));
+
+        return (Integer) this.messageInsert.executeAndReturnKey(args);
+    }
+
+    private void update(
+            Integer id,
+            String type,
+            Timestamp createdAt,
+            String payload,
+            String status,
+            Timestamp processingStartedAt) {
+        this.jdbcTemplate.update(
+                "update inbox set type=?, created_at=?, payload=?::jsonb, status=?, processing_started_at=? where id=?;",
+                type, createdAt, payload, status, processingStartedAt, id
+        );
     }
 
     private final static String sql = """
