@@ -10,9 +10,9 @@ import java.util.concurrent.TimeUnit;
 @Component
 class InboxProcessor {
 
-    private Log log = LogFactory.getLog(InboxProcessor.class);
+    private final Log log = LogFactory.getLog(InboxProcessor.class);
 
-    @Scheduled(fixedRateString = "2", timeUnit = TimeUnit.SECONDS)
+    @Scheduled(fixedDelay = 2, timeUnit = TimeUnit.SECONDS)
     public void scheduledTask() {
         log.info("job się odpalił z scheduled");
     }

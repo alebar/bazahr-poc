@@ -21,4 +21,21 @@ class IncomingMessage {
         this.payload = payload;
         this.status = status;
     }
+
+    IncomingMessage(Integer id, Instant createdAt, Map<String, Object> payload, IncomingMessageStatus status) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.payload = payload;
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "IncomingMessage{" +
+                "id=" + id +
+                ", createdAt=" + createdAt +
+                ", payload=" + payload +
+                ", status=" + status +
+                '}';
+    }
 }

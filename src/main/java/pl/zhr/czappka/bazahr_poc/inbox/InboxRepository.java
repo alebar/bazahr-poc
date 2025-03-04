@@ -1,14 +1,21 @@
 package pl.zhr.czappka.bazahr_poc.inbox;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 class InboxRepository {
+
+    private final static TypeReference<HashMap<String,Object>> MAP_REF = new TypeReference<>() {};
+
 
     final JdbcTemplate jdbcTemplate;
     final ObjectMapper objectMapper;
@@ -32,5 +39,53 @@ class InboxRepository {
         ));
         msg.id = (Integer) id;
         return msg;
+    }
+
+    private final static String sql = """
+            update inbox
+            set status = 'processing', processing_started_at = now()
+            where id = (
+                select id from inbox
+                where
+                    (status = 'pending')
+                    or (
+                        status = 'processing'
+                        and processing_started_at is not null
+                        and processing_started_at < now() - interval '3 minutes')
+                order by created_at
+                limit 1
+                for update skip locked
+            )
+            returning *;
+            """;
+
+    Optional<IncomingMessage> findOldestPendingMessageSettingProcessing() {
+        final PreparedStatementCallback<Optional<IncomingMessage>> callback = ps -> {
+            ps.execute();
+            var rs = ps.getResultSet();
+            if (rs.next()) {
+                try {
+                    var p = this.objectMapper.readValue(
+                            rs.getString("payload"),
+                            MAP_REF
+                    );
+                    var im = new IncomingMessage(
+                            rs.getInt("id"),
+                            rs.getTimestamp("created_at").toInstant(),
+                            p,
+                            IncomingMessageStatus.valueOf(rs.getString("status"))
+                    );
+                    return Optional.of(im);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                return Optional.empty();
+            }
+        };
+        return this.jdbcTemplate.execute(
+                con -> con.prepareStatement(sql),
+                callback
+        );
     }
 }
