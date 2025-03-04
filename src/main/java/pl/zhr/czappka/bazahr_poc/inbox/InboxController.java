@@ -17,7 +17,7 @@ class InboxController {
 
     private final InboxRepository inboxRepository;
 
-    InboxController(InboxRepository inboxRepository) {
+    InboxController(final InboxRepository inboxRepository) {
         this.inboxRepository = inboxRepository;
     }
 
