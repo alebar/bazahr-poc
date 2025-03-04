@@ -11,7 +11,13 @@ class Membership {
 
     Instant createdAt;
 
-    Membership(Instant createdAt) {
+    String personId;
+
+    String unitId;
+
+    Membership(Instant createdAt, String personId, String unitId) {
         this.createdAt = createdAt;
+        this.personId = personId;
+        this.unitId = unitId;
     }
 }
