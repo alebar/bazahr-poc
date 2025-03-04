@@ -28,14 +28,23 @@ class IncomingMessage {
 
     Instant processingStartedAt;
 
-    IncomingMessage(String type, Instant createdAt, Map<String, Object> payload, Status status) {
+    IncomingMessage(
+            final String type,
+            final Instant createdAt,
+            final Map<String, Object> payload,
+            final Status status) {
         this.type = type;
         this.createdAt = createdAt;
         this.payload = payload;
         this.status = status;
     }
 
-    IncomingMessage(Integer id, String type, Instant createdAt, Map<String, Object> payload, Status status) {
+    IncomingMessage(
+            final Integer id,
+            final String type,
+            final Instant createdAt,
+            final Map<String, Object> payload,
+            final Status status) {
         this.id = id;
         this.type = type;
         this.createdAt = createdAt;

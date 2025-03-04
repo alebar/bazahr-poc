@@ -8,7 +8,7 @@ class MembershipsQueryController {
 
     private final MembershipRepository repository;
 
-    MembershipsQueryController(MembershipRepository repository) {
+    MembershipsQueryController(final MembershipRepository repository) {
         this.repository = repository;
     }
 

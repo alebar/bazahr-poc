@@ -15,7 +15,7 @@ class InboxProcessingTrigger {
     private final InboxRepository repository;
     private final InboxProcessor inboxProcessor;
 
-    InboxProcessingTrigger(InboxRepository repository, InboxProcessor inboxProcessor) {
+    InboxProcessingTrigger(final InboxRepository repository, final InboxProcessor inboxProcessor) {
         this.repository = repository;
         this.inboxProcessor = inboxProcessor;
     }

@@ -14,7 +14,7 @@ class OutboxProcessor {
 
     private final OutboxRepository outboxRepository;
 
-    OutboxProcessor(OutboxRepository outboxRepository) {
+    OutboxProcessor(final OutboxRepository outboxRepository) {
         this.outboxRepository = outboxRepository;
     }
 
@@ -48,7 +48,6 @@ class OutboxProcessor {
 
                 // Not implemented, but you get the idea...
             }
-
         }
     }
 

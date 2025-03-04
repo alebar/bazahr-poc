@@ -23,7 +23,9 @@ class InboxRepository {
 
     final SimpleJdbcInsert messageInsert;
 
-    InboxRepository(JdbcTemplate jdbcTemplate, ObjectMapper objectMapper) {
+    InboxRepository(
+            final JdbcTemplate jdbcTemplate,
+            final ObjectMapper objectMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.objectMapper = objectMapper;
         this.messageInsert = new SimpleJdbcInsert(this.jdbcTemplate).
@@ -54,11 +56,11 @@ class InboxRepository {
     }
 
     private Integer insert(
-            String type,
-            Timestamp createdAt,
-            String payload,
-            String status,
-            Timestamp processingStartedAt) {
+            final String type,
+            final Timestamp createdAt,
+            final String payload,
+            final String status,
+            final Timestamp processingStartedAt) {
         Map<String, Object> args = new HashMap<>();
         args.put("type", type);
         args.put("created_at", createdAt);
@@ -71,12 +73,12 @@ class InboxRepository {
     }
 
     private void update(
-            Integer id,
-            String type,
-            Timestamp createdAt,
-            String payload,
-            String status,
-            Timestamp processingStartedAt) {
+            final Integer id,
+            final String type,
+            final Timestamp createdAt,
+            final String payload,
+            final String status,
+            final Timestamp processingStartedAt) {
         this.jdbcTemplate.update(
                 "update inbox set type=?, created_at=?, payload=?::jsonb, status=?, processing_started_at=? where id=?;",
                 type, createdAt, payload, status, processingStartedAt, id

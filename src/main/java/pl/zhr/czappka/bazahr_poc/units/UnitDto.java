@@ -9,7 +9,7 @@ public class UnitDto {
         return new UnitDto(unit.unitId, unit.numerosity);
     }
 
-    UnitDto(String id, Integer numerosity) {
+    UnitDto(final String id, final Integer numerosity) {
         this.id = id;
         this.numerosity = numerosity;
     }

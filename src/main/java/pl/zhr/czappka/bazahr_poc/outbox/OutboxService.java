@@ -17,7 +17,9 @@ public class OutboxService {
         this.outboxRepository = outboxRepository;
     }
 
-    public void queue(String type, Map<String, Object> payload) {
+    public void queue(
+            final String type,
+            final Map<String, Object> payload) {
         var currentTime = Instant.now();
         listenersRegistry.get(type).stream().
                 map(targetUrl -> new OutgoingMessage(type, payload, currentTime, targetUrl)).

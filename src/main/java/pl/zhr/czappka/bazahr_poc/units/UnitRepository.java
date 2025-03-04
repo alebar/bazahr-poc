@@ -6,6 +6,6 @@ import java.util.Optional;
 
 interface UnitRepository extends CrudRepository<Unit, Integer> {
 
-    Optional<Unit> findByUnitId(String unitId);
+    Optional<Unit> findByUnitId(final String unitId);
 
 }

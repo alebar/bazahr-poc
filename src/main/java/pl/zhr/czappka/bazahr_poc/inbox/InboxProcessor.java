@@ -14,7 +14,10 @@ class InboxProcessor {
     private final InboxRepository inboxRepository;
     private final OutboxService outboxService;
 
-    InboxProcessor(List<Denormalizer> denormalizers, InboxRepository inboxRepository, OutboxService outboxService) {
+    InboxProcessor(
+            final List<Denormalizer> denormalizers,
+            final InboxRepository inboxRepository,
+            final OutboxService outboxService) {
         this.denormalizers = denormalizers;
         this.inboxRepository = inboxRepository;
         this.outboxService = outboxService;

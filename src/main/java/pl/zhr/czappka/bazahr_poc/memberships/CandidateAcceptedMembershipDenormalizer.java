@@ -12,17 +12,17 @@ class CandidateAcceptedMembershipDenormalizer implements Denormalizer {
 
     private final MembershipRepository repository;
 
-    CandidateAcceptedMembershipDenormalizer(MembershipRepository repository) {
+    CandidateAcceptedMembershipDenormalizer(final MembershipRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public boolean accepts(String type) {
+    public boolean accepts(final String type) {
         return "urn:ekp:events/candidate-accepted".equals(type);
     }
 
     @Override
-    public void denormalize(Map<String, Object> payload) {
+    public void denormalize(final Map<String, Object> payload) {
         var unitId = (String) payload.get("unitId");
         var candidateIds = ((List<?>) payload.get("candidateIds")).
                 stream().

@@ -16,12 +16,12 @@ class CandidateAcceptedUnitDenormalizer implements Denormalizer {
     }
 
     @Override
-    public boolean accepts(String type) {
+    public boolean accepts(final String type) {
         return "urn:ekp:events/candidate-accepted".equals(type);
     }
 
     @Override
-    public void denormalize(Map<String, Object> payload) {
+    public void denormalize(final Map<String, Object> payload) {
         var unitId = (String) payload.get("unitId");
         var candidates = (Collection<?>) payload.get("candidateIds");
 
