@@ -116,7 +116,7 @@ class InboxRepository {
                             rs.getString("type"),
                             rs.getTimestamp("created_at").toInstant(),
                             payload,
-                            IncomingMessageStatus.valueOf(rs.getString("status"))
+                            IncomingMessage.Status.valueOf(rs.getString("status"))
                     );
                     return Optional.of(im);
                 } catch (JsonProcessingException e) {

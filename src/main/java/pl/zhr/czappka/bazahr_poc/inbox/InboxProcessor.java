@@ -1,45 +1,34 @@
 package pl.zhr.czappka.bazahr_poc.inbox;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import pl.zhr.czappka.bazahr_poc.Denormalizer;
+import pl.zhr.czappka.bazahr_poc.outbox.OutboxService;
 
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 @Component
 class InboxProcessor {
 
-    private final Log log = LogFactory.getLog(InboxProcessor.class);
+    private final List<Denormalizer> denormalizers;
+    private final InboxRepository inboxRepository;
+    private final OutboxService outboxService;
 
-    private final InboxRepository repository;
-    private final DenormalizationService denormalizationService;
-
-    InboxProcessor(InboxRepository repository, DenormalizationService denormalizationService) {
-        this.repository = repository;
-        this.denormalizationService = denormalizationService;
+    InboxProcessor(List<Denormalizer> denormalizers, InboxRepository inboxRepository, OutboxService outboxService) {
+        this.denormalizers = denormalizers;
+        this.inboxRepository = inboxRepository;
+        this.outboxService = outboxService;
     }
 
-    @Scheduled(fixedDelay = 2, timeUnit = TimeUnit.SECONDS)
-    void findAndProcess() {
-        var opt = repository.findOldestPendingMessageSettingProcessing();
-
-        if (opt.isEmpty()) {
-            log.debug("No incoming message to process.");
-        } else {
-            var msg = opt.get();
-            if (log.isDebugEnabled()) {
-                log.debug("Processing incoming message: " + msg);
-            }
-            try {
-                this.denormalizationService.handle(msg);
-                msg.finish();
-                this.repository.save(msg);
-            } catch (Throwable t) {
-                log.warn("Problem while processing msg with id: " + msg.id, t);
-                msg.fail();
-                this.repository.save(msg);
-            }
-        }
+    @Transactional
+    void process(final IncomingMessage msg) {
+        this.denormalizers.
+                stream().
+                filter(d -> d.accepts(msg.type)).
+                forEach(d -> d.denormalize(msg.payload));
+        this.outboxService.queue(msg.type, msg.payload);
+        msg.finish();
+        this.inboxRepository.save(msg);
     }
+
 }

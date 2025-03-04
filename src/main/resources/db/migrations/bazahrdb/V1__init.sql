@@ -7,6 +7,16 @@ create table inbox (
   status varchar not null
 );
 
+create table outbox (
+  id serial primary key,
+  type text not null,
+  payload jsonb,
+  created_at timestamp with time zone not null,
+  target_url text,
+  publishing_started_at timestamp with time zone,
+  status varchar not null
+);
+
 create table membership (
   id serial primary key,
   created_at timestamp with time zone not null,

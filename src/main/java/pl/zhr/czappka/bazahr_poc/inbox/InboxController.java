@@ -1,13 +1,10 @@
 package pl.zhr.czappka.bazahr_poc.inbox;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.Instant;
 import java.util.List;
@@ -34,7 +31,7 @@ class InboxController {
                         "candidateIds", List.of("urn:kof:people/1", "urn:kof:people/2"),
                         "unitId", "urn:ekp:units/1a"
                 ),
-                IncomingMessageStatus.pending
+                IncomingMessage.Status.pending
         );
         this.inboxRepository.save(msg);
     }

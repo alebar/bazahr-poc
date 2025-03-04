@@ -8,6 +8,13 @@ import java.util.Optional;
 
 class IncomingMessage {
 
+    enum Status {
+        pending,
+        processing,
+        failed,
+        finished
+    }
+    
     @Id
     Integer id;
 
@@ -17,18 +24,18 @@ class IncomingMessage {
 
     Map<String, Object> payload;
 
-    IncomingMessageStatus status;
+    Status status;
 
     Instant processingStartedAt;
 
-    IncomingMessage(String type, Instant createdAt, Map<String, Object> payload, IncomingMessageStatus status) {
+    IncomingMessage(String type, Instant createdAt, Map<String, Object> payload, Status status) {
         this.type = type;
         this.createdAt = createdAt;
         this.payload = payload;
         this.status = status;
     }
 
-    IncomingMessage(Integer id, String type, Instant createdAt, Map<String, Object> payload, IncomingMessageStatus status) {
+    IncomingMessage(Integer id, String type, Instant createdAt, Map<String, Object> payload, Status status) {
         this.id = id;
         this.type = type;
         this.createdAt = createdAt;
@@ -38,12 +45,12 @@ class IncomingMessage {
 
     void fail() {
         clearProcessing();
-        this.status = IncomingMessageStatus.failed;
+        this.status = Status.failed;
     }
 
     void finish() {
         clearProcessing();
-        this.status = IncomingMessageStatus.finished;
+        this.status = Status.finished;
     }
 
     private void clearProcessing() {
